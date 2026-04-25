@@ -1,0 +1,70 @@
+@model IEnumerable<PlataformaCreditos.Models.SolicitudCredito>
+
+@{
+    ViewData["Title"] = "Panel de Analista";
+}
+
+<h1 class="h3 mb-3">Panel de Analista</h1>
+<p class="text-muted">Solo usuarios con rol Analista pueden acceder a este panel.</p>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Ingresos</th>
+                    <th>Monto solicitado</th>
+                    <th>Fecha</th>
+                    <th style="width: 330px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">No hay solicitudes pendientes.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>Cliente #@item.ClienteId</td>
+                            <td>S/ @item.Cliente!.IngresosMensuales.ToString("N2")</td>
+                            <td>S/ @item.MontoSolicitado.ToString("N2")</td>
+                            <td>@item.FechaSolicitud.ToLocalTime().ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <form asp-action="Aprobar" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button class="btn btn-success btn-sm">Aprobar</button>
+                                </form>
+
+                                <form asp-action="Rechazar" method="post" class="mt-2">
+                                    <input type="hidden" name="Id" value="@item.Id" />
+                                    <div class="input-group input-group-sm">
+                                        <input name="MotivoRechazo" class="form-control" placeholder="Motivo de rechazo" />
+                                        <button class="btn btn-danger">Rechazar</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

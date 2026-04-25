@@ -1,0 +1,33 @@
+@model PlataformaCreditos.Models.SolicitudCredito
+
+@{
+    ViewData["Title"] = "Detalle de solicitud";
+}
+
+<h1 class="h3 mb-3">Detalle de solicitud #@Model.Id</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Monto solicitado</dt>
+            <dd class="col-sm-9">S/ @Model.MontoSolicitado.ToString("N2")</dd>
+
+            <dt class="col-sm-3">Fecha de solicitud</dt>
+            <dd class="col-sm-9">@Model.FechaSolicitud.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9">@Model.Estado</dd>
+
+            <dt class="col-sm-3">Ingresos mensuales</dt>
+            <dd class="col-sm-9">S/ @Model.Cliente!.IngresosMensuales.ToString("N2")</dd>
+
+            @if (!string.IsNullOrWhiteSpace(Model.MotivoRechazo))
+            {
+                <dt class="col-sm-3">Motivo de rechazo</dt>
+                <dd class="col-sm-9">@Model.MotivoRechazo</dd>
+            }
+        </dl>
+    </div>
+</div>
+
+<a asp-action="MisSolicitudes" class="btn btn-outline-secondary mt-3">Volver a mis solicitudes</a>

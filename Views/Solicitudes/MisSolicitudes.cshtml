@@ -1,0 +1,107 @@
+@model PlataformaCreditos.ViewModels.SolicitudFiltroViewModel
+@using PlataformaCreditos.Models
+
+@{
+    ViewData["Title"] = "Mis solicitudes";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h3 mb-1">Mis solicitudes</h1>
+        <p class="text-muted mb-0">Consulta tus solicitudes de crédito y filtra por estado, monto o fecha.</p>
+    </div>
+    <a asp-action="Crear" class="btn btn-primary">Nueva solicitud</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div>@error.ErrorMessage</div>
+        }
+    </div>
+}
+
+@if (ViewBag.CacheStatus != null)
+{
+    <div class="alert alert-info py-2">@ViewBag.CacheStatus</div>
+}
+
+<form method="get" class="card card-body mb-4 shadow-sm">
+    <div class="row g-3">
+        <div class="col-md-2">
+            <label class="form-label">Estado</label>
+            <select asp-for="Estado" asp-items="Html.GetEnumSelectList<EstadoSolicitud>()" class="form-select">
+                <option value="">Todos</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Monto mínimo</label>
+            <input asp-for="MontoMin" class="form-control" type="number" step="0.01" min="0" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Monto máximo</label>
+            <input asp-for="MontoMax" class="form-control" type="number" step="0.01" min="0" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Fecha inicio</label>
+            <input asp-for="FechaInicio" class="form-control" type="date" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Fecha fin</label>
+            <input asp-for="FechaFin" class="form-control" type="date" />
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-dark w-100">Filtrar</button>
+        </div>
+    </div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Monto solicitado</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Solicitudes.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">No existen solicitudes para los filtros seleccionados.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model.Solicitudes)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>S/ @item.MontoSolicitado.ToString("N2")</td>
+                            <td>@item.FechaSolicitud.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <span class="badge @(item.Estado == EstadoSolicitud.Pendiente ? "bg-warning text-dark" : item.Estado == EstadoSolicitud.Aprobado ? "bg-success" : "bg-danger")">
+                                    @item.Estado
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
