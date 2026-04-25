@@ -49,7 +49,15 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-await DbSeeder.SeedAsync(app.Services);
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<ApplicationDbContext>();
+
+    await db.Database.MigrateAsync();   // CREA TABLAS
+
+    await DbSeeder.SeedAsync(services); // LUEGO INSERTA DATOS
+}
 
 if (app.Environment.IsDevelopment())
 {
