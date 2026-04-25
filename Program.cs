@@ -33,16 +33,11 @@ if (!string.IsNullOrWhiteSpace(redisConnection))
     {
         options.Configuration = redisConnection;
     });
-
-    var redis = ConnectionMultiplexer.Connect(redisConnection);
-    builder.Services.AddDataProtection()
-        .PersistKeysToStackExchangeRedis(redis, "PlataformaCreditos-DataProtection-Keys");
 }
 else
 {
     builder.Services.AddDistributedMemoryCache();
 }
-
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
