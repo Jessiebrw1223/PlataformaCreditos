@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlataformaCreditos.Data;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,10 +32,6 @@ if (!string.IsNullOrWhiteSpace(redisConnection))
     {
         options.Configuration = redisConnection;
     });
-
-    var redis = ConnectionMultiplexer.Connect(redisConnection);
-    builder.Services.AddDataProtection()
-        .PersistKeysToStackExchangeRedis(redis, "PlataformaCreditos-DataProtection-Keys");
 }
 else
 {
