@@ -13,7 +13,7 @@ public static class DbSeeder
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-        await context.Database.MigrateAsync();
+        //await context.Database.MigrateAsync();
 
         const string analistaRole = "Analista";
         if (!await roleManager.RoleExistsAsync(analistaRole))
