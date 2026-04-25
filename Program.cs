@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlataformaCreditos.Data;
-using StackExchange.Redis;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
